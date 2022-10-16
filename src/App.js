@@ -1,39 +1,35 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   ChakraProvider,
   Box,
-  Text,
-  Link,
-  VStack,
-  Code,
-  Grid,
   theme,
+  Flex,
 } from '@chakra-ui/react';
-import { ColorModeSwitcher } from './ColorModeSwitcher';
-import { Logo } from './Logo';
+import { TemperatureDetails } from './components/TemperatureDetails';
+import { TimeDetails } from './components/time';
+import { TemperatureSlider } from './components/TemperatureSlider';
+
 
 function App() {
+  const [hours, setHours] = useState('01');
+  const [minutes, setMinutes] = useState('03');
+  const [seconds, setSeconds] = useState('05');
+  const [currentTemperature, setCurrentTemperature] = useState(57);
+  const [sliderValue, setSliderValue] = useState(100)
+  const [showTooltip, setShowTooltip] = useState(false)
   return (
     <ChakraProvider theme={theme}>
-      <Box textAlign="center" fontSize="xl">
-        <Grid minH="100vh" p={3}>
-          <ColorModeSwitcher justifySelf="flex-end" />
-          <VStack spacing={8}>
-            <Logo h="40vmin" pointerEvents="none" />
-            <Text>
-              Edit <Code fontSize="xl">src/App.js</Code> and save to reload.
-            </Text>
-            <Link
-              color="teal.500"
-              href="https://chakra-ui.com"
-              fontSize="2xl"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learn Chakra
-            </Link>
-          </VStack>
-        </Grid>
+      <Box background={'#FBFBFB'}>
+        <Box margin='6rem auto' maxWidth={'1280px'}>
+          <TimeDetails hours={hours}  minutes={minutes} seconds={seconds}/>
+        <Flex justifyContent={'space-around'} marginTop='8rem'>
+          <TemperatureDetails title = 'Target temperature' temp = {39}  />
+          <TemperatureDetails title = 'Actual Temperature' temp = {currentTemperature}/>
+        </Flex>
+        <Box margin='6rem auto' maxWidth={'800px'}>
+        <TemperatureSlider  sliderValue={sliderValue } setSliderValue={setSliderValue} showTooltip={showTooltip} setShowTooltip={setShowTooltip} />
+        </Box>
+        </Box> 
       </Box>
     </ChakraProvider>
   );
