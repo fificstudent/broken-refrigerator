@@ -41,7 +41,7 @@ export const TemperatureDetails = ({ title, temp }) => {
           fontSize="3.6rem"
           fontWeight={200}
         >
-          {temp} <span>&#176;</span>C
+          {temp} <span>&#176;</span>F
         </Text>
       </Flex>
     </Card>
