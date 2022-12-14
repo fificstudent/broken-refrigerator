@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   Slider,
   SliderMark,
@@ -7,6 +7,8 @@ import {
   SliderThumb,
   Tooltip,
 } from '@chakra-ui/react';
+import useSound from 'use-sound';
+import fireHouseAlarm from '../assets/fire-house-alarm-83490.mp3';
 export const TemperatureSlider = ({
   timeDelay,
   outsideTemperature,
@@ -16,30 +18,54 @@ export const TemperatureSlider = ({
   setSliderValue,
   showTooltip,
   setShowTooltip,
+  round,
+  tempList,
+  setRound,
+  setTempList
 }) => {
   const [count, setCount] = React.useState(0);
-  const [tempList, setTempList] = React.useState([]);
-
- 
-  React.useEffect(() => {
-    if (count !== 0 ){
-        setTimeout(() => {
-          setCurrentTemperature(
-            currentTemperature => {
-              const a = 4;
-              const r = 1.02719925;
-
-            return Math.round(a* Math.pow(r, sliderValue - 1))
-          }
-          );
-
-        }, 1000);
-    }
+  
+  const [play, { stop }] = useSound(fireHouseAlarm);
+  const getDisplayData = useCallback(() => {    
+    if (tempList[round]) {
+      setRound(round + 1);
+      setCurrentTemperature(() => {
+        if (tempList.length > 0) {
+          return tempList[round] || tempList[round - 1];
+        } else {
+          return 57;
+        }
+      });
+    } else {
+      setCurrentTemperature(() => {
+        return tempList[tempList.length - 1];
+      });
+    }  
   }, [count]);
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setCount(count => count + 1);
+    }, timeDelay);
+    return () => clearInterval(interval);
+  }, []);
+  React.useEffect(() => {
+    getDisplayData();
+  }, [count]);
+  React.useEffect(() => {
+    const a = 4;
+    const r = 1.02719925;
+    const nextVal = Math.round(a * Math.pow(r, sliderValue - 1))
+    if (nextVal >= 150) {
+      play();
+    } else {
+      stop();
+    }
+    setTempList([...tempList, nextVal]);
+  }, [sliderValue]);
   
   const changeActualTemperature = v => {
     setSliderValue(v);
-    setCount(count + 1);
   };
  
   return (
