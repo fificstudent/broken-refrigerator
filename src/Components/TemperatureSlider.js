@@ -21,26 +21,22 @@ export const TemperatureSlider = ({
   round,
   tempList,
   setRound,
-  setTempList
+  setTempList,
 }) => {
   const [count, setCount] = React.useState(0);
-  
+
   const [play, { stop }] = useSound(fireHouseAlarm);
-  const getDisplayData = useCallback(() => {    
+  const getDisplayData = useCallback(() => {
     if (tempList[round]) {
       setRound(round + 1);
       setCurrentTemperature(() => {
-        if (tempList.length > 0) {
-          return tempList[round] || tempList[round - 1];
-        } else {
-          return 57;
-        }
+        return tempList[round];
       });
     } else {
       setCurrentTemperature(() => {
         return tempList[tempList.length - 1];
       });
-    }  
+    }
   }, [count]);
 
   React.useEffect(() => {
@@ -49,13 +45,17 @@ export const TemperatureSlider = ({
     }, timeDelay);
     return () => clearInterval(interval);
   }, []);
+
   React.useEffect(() => {
+    console.log('temp1');
     getDisplayData();
+    console.log('temp2');
   }, [count]);
+  
   React.useEffect(() => {
     const a = 4;
     const r = 1.02719925;
-    const nextVal = Math.round(a * Math.pow(r, sliderValue - 1))
+    const nextVal = Math.round(a * Math.pow(r, sliderValue - 1));
     if (nextVal >= 150) {
       play();
     } else {
@@ -63,11 +63,11 @@ export const TemperatureSlider = ({
     }
     setTempList([...tempList, nextVal]);
   }, [sliderValue]);
-  
+
   const changeActualTemperature = v => {
     setSliderValue(v);
   };
- 
+
   return (
     <Slider
       id="slider"
@@ -80,7 +80,6 @@ export const TemperatureSlider = ({
       onMouseLeave={() => setShowTooltip(false)}
       marginTop="6rem"
       maxWidth="calc(1280px - 8rem)"
-      
     >
       <SliderMark value={0} mt="1" ml="-2.5" fontSize="sm">
         0
