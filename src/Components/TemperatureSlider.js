@@ -27,7 +27,7 @@ export const TemperatureSlider = ({
   const [count, setCount] = React.useState(0);
 
   const [play, { stop }] = useSound(fireHouseAlarm);
-  const base_url = 'http://localhost:5000/api';
+  const base_url = 'https://fificbrokenfridge.onrender.com/api';
 
   const getDisplayData = useCallback(() => {
     if (tempList[round]) {
