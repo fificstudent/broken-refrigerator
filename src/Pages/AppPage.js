@@ -41,6 +41,7 @@ export default function AppPage() {
       round === tempList.length
     ) {
       onOpen();
+      sessionStorage.removeItem('userId')
     }
   }, [hours, minutes, seconds, round, tempList]);
 

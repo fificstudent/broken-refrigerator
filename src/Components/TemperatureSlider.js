@@ -9,6 +9,7 @@ import {
 } from '@chakra-ui/react';
 import useSound from 'use-sound';
 import fireHouseAlarm from '../assets/fire-house-alarm-83490.mp3';
+import axios from 'axios';
 export const TemperatureSlider = ({
   timeDelay,
   outsideTemperature,
@@ -26,12 +27,20 @@ export const TemperatureSlider = ({
   const [count, setCount] = React.useState(0);
 
   const [play, { stop }] = useSound(fireHouseAlarm);
+  const base_url = 'http://localhost:5000/api';
+
   const getDisplayData = useCallback(() => {
     if (tempList[round]) {
       setRound(round + 1);
       setCurrentTemperature(() => {
         return tempList[round];
       });
+
+      const body = {
+        temperature: tempList[round],
+        createdBy: sessionStorage.getItem('userId')
+      };
+      axios.post(`${base_url}/temperatures`, body);
     } else {
       setCurrentTemperature(() => {
         return tempList[tempList.length - 1];
@@ -47,11 +56,9 @@ export const TemperatureSlider = ({
   }, []);
 
   React.useEffect(() => {
-    console.log('temp1');
     getDisplayData();
-    console.log('temp2');
   }, [count]);
-  
+
   React.useEffect(() => {
     const a = 4;
     const r = 1.02719925;
