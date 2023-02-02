@@ -29,7 +29,6 @@ export default function AppPage() {
   const [tempList, setTempList] = React.useState([57]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
-  const outsideTemperature = 48;
   const timeDelay = 5000;
   const timerMinutes = 10;
 
@@ -72,8 +71,6 @@ export default function AppPage() {
         <Box margin="6rem auto" maxWidth={'800px'}>
           <TemperatureSlider
             timeDelay={timeDelay}
-            outsideTemperature={outsideTemperature}
-            currentTemperature={currentTemperature}
             setCurrentTemperature={setCurrentTemperature}
             sliderValue={sliderValue}
             setSliderValue={setSliderValue}

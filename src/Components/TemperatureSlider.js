@@ -12,8 +12,6 @@ import fireHouseAlarm from '../assets/fire-house-alarm-83490.mp3';
 import axios from 'axios';
 export const TemperatureSlider = ({
   timeDelay,
-  outsideTemperature,
-  currentTemperature,
   setCurrentTemperature,
   sliderValue,
   setSliderValue,
@@ -25,8 +23,8 @@ export const TemperatureSlider = ({
   setTempList,
 }) => {
   const [count, setCount] = React.useState(0);
-  const [regel, setRegel] = React.useState(100);
-  const [steuer, setSteuer] = React.useState(-24.9);
+  const [steuers, setSteuers] = React.useState([-24.9]);
+  const [regels, setRegels] = React.useState([12, 62.3, 103.07, 139.79]);
 
   const [play, { stop }] = useSound(fireHouseAlarm);
   const base_url = 'https://fificbrokenfridge.onrender.com/api';
@@ -55,11 +53,11 @@ export const TemperatureSlider = ({
       setCount(count => count + 1);
     }, timeDelay);
     return () => clearInterval(interval);
-  }, []);
+  }, [timeDelay]);
 
   React.useEffect(() => {
     getDisplayData();
-  }, [count]);
+  }, [getDisplayData]);
 
   React.useEffect(() => {
     //stell is the slider value
@@ -67,29 +65,26 @@ export const TemperatureSlider = ({
     const tempo = 0.1;
     const regelfaktor = 0.3;
     const v = 3;
-    const a = 4;
-    const r = 1.02719925;
-    const nextVal = Math.round(a * Math.pow(r, sliderValue - 1));
-    setRegel(regel => {
-      const tempDiff = stoer - regel;
-      const ans = regel + tempDiff * tempo - steuer;
-      // debugger;
-      return ans;
-    });
+    const new_regel = Math.round(
+      regels[regels.length - 1] +
+        (stoer - regels[regels.length - 1]) * tempo -
+        steuers[steuers.length - 1]
+    );
 
-    if (round > v) {
-      setSteuer(tempList[round - v] - sliderValue * regelfaktor);
-    } else {
-      setSteuer(steuer);
-    }
-
-    if (nextVal >= 120) {
+    setRegels([...regels, new_regel]);
+    const new_steur = Math.round(
+      (regels[regels.length - v] - sliderValue) * regelfaktor
+    );
+    setSteuers([...steuers, new_steur]);
+    if (regels.slice(-1)[0] >= 120) {
       play();
     } else {
       stop();
     }
-    console.log(nextVal, regel, round, steuer);
-    setTempList([...tempList, nextVal]);
+    if ( !(round === 0 && new_regel === 168)) {
+      setTempList([...tempList, new_regel]);
+    }
+    console.log(new_regel, regels, tempList)
   }, [sliderValue]);
 
   const changeActualTemperature = v => {
