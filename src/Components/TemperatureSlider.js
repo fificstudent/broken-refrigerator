@@ -25,6 +25,8 @@ export const TemperatureSlider = ({
   setTempList,
 }) => {
   const [count, setCount] = React.useState(0);
+  const [regel, setRegel] = React.useState(100);
+  const [steuer, setSteuer] = React.useState(-24.9);
 
   const [play, { stop }] = useSound(fireHouseAlarm);
   const base_url = 'https://fificbrokenfridge.onrender.com/api';
@@ -38,7 +40,7 @@ export const TemperatureSlider = ({
 
       const body = {
         temperature: tempList[round],
-        createdBy: sessionStorage.getItem('userId')
+        createdBy: sessionStorage.getItem('userId'),
       };
       axios.post(`${base_url}/temperatures`, body);
     } else {
@@ -60,14 +62,33 @@ export const TemperatureSlider = ({
   }, [count]);
 
   React.useEffect(() => {
+    //stell is the slider value
+    const stoer = 170;
+    const tempo = 0.1;
+    const regelfaktor = 0.3;
+    const v = 3;
     const a = 4;
     const r = 1.02719925;
     const nextVal = Math.round(a * Math.pow(r, sliderValue - 1));
-    if (nextVal >= 150) {
+    setRegel(regel => {
+      const tempDiff = stoer - regel;
+      const ans = regel + tempDiff * tempo - steuer;
+      // debugger;
+      return ans;
+    });
+
+    if (round > v) {
+      setSteuer(tempList[round - v] - sliderValue * regelfaktor);
+    } else {
+      setSteuer(steuer);
+    }
+
+    if (nextVal >= 120) {
       play();
     } else {
       stop();
     }
+    console.log(nextVal, regel, round, steuer);
     setTempList([...tempList, nextVal]);
   }, [sliderValue]);
 
