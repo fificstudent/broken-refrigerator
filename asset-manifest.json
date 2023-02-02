@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.js": "/react-gh-pages/static/js/main.24a557c0.js",
+    "static/js/845.fb4dbd97.chunk.js": "/react-gh-pages/static/js/845.fb4dbd97.chunk.js",
+    "static/js/787.b179ce54.chunk.js": "/react-gh-pages/static/js/787.b179ce54.chunk.js",
+    "static/media/fire-house-alarm-83490.mp3": "/react-gh-pages/static/media/fire-house-alarm-83490.296457fb664b9a0fff52.mp3",
+    "index.html": "/react-gh-pages/index.html",
+    "main.24a557c0.js.map": "/react-gh-pages/static/js/main.24a557c0.js.map",
+    "845.fb4dbd97.chunk.js.map": "/react-gh-pages/static/js/845.fb4dbd97.chunk.js.map",
+    "787.b179ce54.chunk.js.map": "/react-gh-pages/static/js/787.b179ce54.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.24a557c0.js"
+  ]
+}
